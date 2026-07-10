@@ -1,0 +1,29 @@
+Sehr geehrte(r) [Landlord Name or "Damen und Herren"],
+
+mit großem Interesse habe ich Ihre Anzeige für die Wohnung in [Neighborhood/Location] gelesen und bewerbe mich hiermit um einen Besichtigungstermin.
+
+Ich arbeite als [YOUR_JOB_TITLE] in unbefristeter Festanstellung bei [YOUR_EMPLOYER] und verfüge über ein hohes und sehr sicheres Einkommen.
+
+Kurz zu meinem Profil:
+- Ich bin [YOUR_AGE] Jahre alt, alleinstehend und Nichtraucher.
+- Ich besitze keine Haustiere und spiele keine Instrumente.
+- Ich suche ein ruhiges, langfristiges Zuhause und gehe mit fremdem Eigentum äußerst sorgsam um.
+
+[OPTIONAL_LLM_INSERT: Write 1-2 natural German sentences here.
+1. Compliment one specific physical feature of the apartment mentioned in the text (z.B. Keller, Einbauküche, Balkon).
+2. COMMUTE RULE: Check if the listing's neighborhood is close to your workplace.
+   - IF YES: Add a sentence stating that the location offers a perfect commute to your workplace.
+   - IF NO: Do NOT mention the commute, location, or workplace at all.
+3. Confirm that the stated move-in date works perfectly for you.
+CRITICAL RULE: DO NOT mention your language skills, English, German, or moving from abroad in this section. DO NOT add conversational filler. Stick strictly to the 3 points above.]
+
+Da ich erst vor kurzem aus dem Ausland ([YOUR_HOME_COUNTRY]) nach München gezogen bin, lerne ich aktuell noch Deutsch (ich habe für diese Nachricht eine Übersetzungshilfe genutzt), spreche aber fließend Englisch.
+
+Meine vollständige Bewerbungsmappe (Gehaltsnachweise, Arbeitsvertrag, SCHUFA-Auskunft, Ausweiskopie und Mieterselbstauskunft) liegt digital bereit und kann ich Ihnen auf Wunsch sofort zusenden.
+
+Über eine Einladung zu einem persönlichen Kennenlernen oder einer Besichtigung würde ich mich außerordentlich freuen!
+
+Mit freundlichen Grüßen,
+
+[YOUR_NAME]
+[YOUR_EMAIL]

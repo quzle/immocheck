@@ -1,0 +1,19 @@
+{
+  "_comment": "Values used to autofill the ImmoScout24 contact form. Copy this file to applicant_form.json and replace the values with your details. The 'name' and 'type' fields map to the IS24 form and should not be changed. Use type 'skip' for fields that are pre-filled/disabled on the form.",
+  "fields": [
+    {"name": "salutation", "value": "Herr", "type": "select"},
+    {"name": "firstName", "value": "YOUR_FIRST_NAME", "type": "text"},
+    {"name": "lastName", "value": "YOUR_LAST_NAME", "type": "text"},
+    {"name": "emailAddress", "value": "your_email@example.com", "type": "skip"},
+    {"name": "phoneNumber", "value": "+49XXXXXXXXXX", "type": "text"},
+    {"name": "street", "value": "YOUR_STREET", "type": "text"},
+    {"name": "houseNumber", "value": "YOUR_HOUSE_NUMBER", "type": "text"},
+    {"name": "postcode", "value": "YOUR_POSTCODE", "type": "text"},
+    {"name": "city", "value": "YOUR_CITY", "type": "text"},
+    {"name": "moveInDateType", "value": "ab sofort", "type": "select"},
+    {"name": "employmentRelationship", "value": "Angestellte:r", "type": "select"},
+    {"name": "income", "value": "4000 - 5000", "type": "select"},
+    {"name": "numberOfPersons", "value": "Einpersonenhaushalt", "type": "select"},
+    {"name": "hasPets", "value": "Nein", "type": "select"}
+  ]
+}

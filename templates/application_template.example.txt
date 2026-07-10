@@ -1,0 +1,13 @@
+{{SALUTATION}}
+
+ich bin sehr an Ihrer Wohnung {{STREET_INFO}} interessiert. Ich arbeite in Vollzeit als [YOUR_JOB_TITLE] bei [YOUR_EMPLOYER] und suche eine ruhige, langfristige Unterkunft.
+
+Ein Einzug {{MOVE_IN_DATE}} passt sehr gut für mich. {{EXTRA_CONDITIONS}} Ich bin ein ruhiger Mieter, Nichtraucher und habe keine Haustiere.
+
+Könnten Sie mir bitte bestätigen, ob {{VIEWING_ASK}}? Auf Anfrage stelle ich sehr gerne meinen Arbeitsvertrag, Gehaltsnachweise und eine aktuelle Schufa zur Verfügung.
+
+Vielen Dank für Ihre Zeit. Ich freue mich auf Ihre Rückmeldung.
+
+Mit freundlichen Grüßen,
+
+[YOUR_NAME]

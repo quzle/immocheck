@@ -1,0 +1,9 @@
+playwright
+playwright-stealth
+python-dotenv
+anthropic
+google-generativeai
+beautifulsoup4
+lxml
+ollama
+requests

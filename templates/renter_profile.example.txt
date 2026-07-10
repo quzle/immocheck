@@ -1,0 +1,17 @@
+# TENANT PROFILE
+Age: YOUR_AGE
+Nationality: YOUR_NATIONALITY
+Marital Status: YOUR_MARITAL_STATUS (e.g. Single / alleinstehend)
+Profession: YOUR_JOB_TITLE
+Employer: YOUR_EMPLOYER (Office location: YOUR_OFFICE_LOCATION)
+Employment Type: YOUR_EMPLOYMENT_TYPE (e.g. Permanent full-time / unbefristete Festanstellung)
+Income: YOUR_INCOME_DESCRIPTION (e.g. High, secure, and fully provable)
+Pets: None (Keine Haustiere)
+Smoking: Non-smoker (Nichtraucher)
+Instruments: None
+Current Lease Ends: YOUR_LEASE_END_DATE
+Language: YOUR_LANGUAGE_SKILLS
+
+# PREFERENCES & TRAITS
+- Add your key tenant traits here (e.g. quiet lifestyle, long-term rental, etc.)
+- Financial history notes (e.g. clean SCHUFA, recent mover, etc.)

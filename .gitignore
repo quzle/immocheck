@@ -1,0 +1,38 @@
+# Real credentials — copy .env.example to .env.local and fill in your values
+.env
+.env.local
+.env.*.local
+
+# Personal templates — copy the .example files and fill in your details
+templates/renter_profile.txt
+templates/application_template.txt
+templates/application_template_verbose.txt
+templates/applicant_form.json
+
+# Runtime outputs (logs, submitted apps, scraped HTML)
+outputs/
+temp_HTMLs/
+
+# Persistent state (user-specific deduplication database)
+data/*.json
+data/*.jsonl
+
+# Browser session cookies
+data/browser_storage_state.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+*.egg-info/
+dist/
+build/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Claude Code local settings
+.claude/settings.local.json
