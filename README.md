@@ -150,13 +150,18 @@ Finally, log in (`python test_login.py`) and run (`python main.py`).
 
 ## Gmail setup
 
-1. Create a Gmail label (e.g. `ImmoScout`) for alert emails
-2. Add a Gmail filter to auto-label incoming alerts from ImmoScout24 (filter by sender: `noreply@immobilienscout24.de`)
-3. Generate an app password at [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords)
-4. Set `IMAP_EMAIL`, `IMAP_PASSWORD`, and `IMAP_FOLDER` in `.env.local`
+ImmoCheck reads listing alerts from a Gmail label. Do this once, on the Gmail side:
 
-**Additional platforms (optional).** Create a separate Gmail label per platform, filter
-its alert emails into that label, and point the matching variable at it:
+1. Create a Gmail label (e.g. `ImmoScout`) for alert emails.
+2. Add a Gmail filter to auto-label incoming alerts from ImmoScout24 (filter by sender: `noreply@immobilienscout24.de`).
+3. Generate an app password at [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) (requires 2-step verification).
+
+That's all you edit here — `setup.py` asks for the app password and the label name, so
+have the label created and the app password copied before you run the wizard.
+
+**Additional platforms (optional).** These aren't covered by the wizard. Create a separate
+Gmail label per platform, filter its alerts into that label, and set the matching variable
+in `.env.local`:
 
 | Platform | Variable | Example label | Filter by sender |
 |---|---|---|---|
@@ -174,7 +179,7 @@ with click-tracking links; the parser resolves each link to the real listing URL
 
 ### Fallback / manual *(recommended)*
 
-Set `FORCE_EMAIL_FALLBACK=true` in `.env.local`. Approved applications are written to `outputs/pending_applications.jsonl` and you receive an email notification with the drafted message. Use the dashboard to review and copy them:
+This is the **default** — the wizard leaves `FORCE_EMAIL_FALLBACK=true`. Approved applications are written to `outputs/pending_applications.jsonl` and you receive an email notification with the drafted message. Use the dashboard to review and copy them:
 
 ```bash
 python tools/generate_pending_html.py
@@ -182,11 +187,14 @@ python tools/generate_pending_html.py
 
 ### Browser automation *(experimental)*
 
-Playwright attempts to fill and submit the contact form automatically. This may work intermittently but is frequently interrupted by CAPTCHA. Try `PLAYWRIGHT_HEADLESS=false` to help avoid detection.
+Playwright attempts to fill and submit the contact form automatically. This may work intermittently but is frequently interrupted by CAPTCHA. To try it, set `FORCE_EMAIL_FALLBACK=false` in `.env.local`; `PLAYWRIGHT_HEADLESS=false` can help avoid detection.
 
 ---
 
 ## Key settings
+
+The wizard sets the common ones for you. To change any setting later, edit `.env.local`
+(see `.env.example` for the full, commented list) or re-run `python setup.py --config-only`.
 
 | Variable | Default | Description |
 |---|---|---|
@@ -205,7 +213,7 @@ Playwright attempts to fill and submit the contact form automatically. This may 
 
 ```
 setup.py                      One-command setup wizard (venv, deps, config)
-.env.example                  Template — copy to .env.local and fill in values
+.env.example                  Config template (the wizard writes .env.local from it)
 ImmoCheck.command             Launcher script (macOS)
 ImmoCheck.bat                 Launcher script (Windows)
 templates/
@@ -259,7 +267,7 @@ grep "\[EVAL\]" outputs/logs/*
 Check the log reason tag. Edit `templates/prompts.json` if the LLM criteria are too strict, or `templates/renter_profile.txt` if your profile doesn't match the listing.
 
 **Bot never processes listings**  
-Verify `.env.local` credentials (`IMAP_EMAIL`, `IMAP_PASSWORD`, API key). Confirm `IMAP_FOLDER` matches the Gmail label name exactly (case-sensitive). Check `outputs/logs/` for errors.
+Verify your credentials — re-run `python setup.py --config-only` to re-enter them, or check `.env.local` directly (`IMAP_EMAIL`, `IMAP_PASSWORD`, API key). Confirm `IMAP_FOLDER` matches the Gmail label name exactly (case-sensitive). Check `outputs/logs/` for errors.
 
 **CAPTCHA blocking submission**  
 Use `FORCE_EMAIL_FALLBACK=true`. If you want to try browser automation, set `PLAYWRIGHT_HEADLESS=false`.
@@ -287,9 +295,8 @@ $env:DOTENV_FILE=".env.profile2"; python main.py
 **Local LLM with Ollama**
 ```bash
 ollama serve && ollama pull qwen3:14b
-# set LLM_PROVIDER=ollama in .env.local
-python main.py
 ```
+Choose **ollama** as the provider when you run `python setup.py` (or set `LLM_PROVIDER=ollama` in `.env.local`), then `python main.py`. No API key needed.
 
 **Verbose logging**
 ```bash
