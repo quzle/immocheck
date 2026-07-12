@@ -20,7 +20,7 @@ from application_fallback import fallback_apply
 from email_notifications import send_application_email, send_captcha_failure_email
 from push_notifications import notify_auto_submitted, notify_manual_required, notify_captcha_failed
 from state import is_processed, mark_processed, extract_listing_id, get_statistics, track_failure, should_retry, clear_failure, get_failure_info, get_captcha_retry_listings, captcha_retries_exhausted, MAX_CAPTCHA_RETRIES
-from utils import load_text_file
+from utils import load_text_file, ensure_working_file
 from translation import translate_text
 
 # Setup logging
@@ -757,8 +757,8 @@ async def main_loop():
 
     # Load profile and template
     try:
-        profile = load_text_file("templates/renter_profile.txt")
-        template = load_text_file("templates/application_template.txt")
+        profile = load_text_file(ensure_working_file("templates/renter_profile.txt"))
+        template = load_text_file(ensure_working_file("templates/application_template.txt"))
     except Exception as e:
         logger.error(f"Failed to load profile or template: {e}")
         return

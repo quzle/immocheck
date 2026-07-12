@@ -1,150 +1,150 @@
-# ImmoCheck
+# 🏠 ImmoCheck
 
-Automated apartment application bot for ImmoScout24, WG-Gesucht, and immobilie1.de.
+### Apply for Munich apartments before everyone else does.
 
-Polls Gmail for listing alert emails, evaluates each apartment with an LLM, drafts a personalized German application, and submits it — or queues it for manual review.
+Munich's rental market moves in minutes. The listings worth having collect hundreds of
+applicants within hours, and the viewing usually goes to someone who applied early with a
+clean, complete, German-language message. Doing that by hand means refreshing ImmoScout24
+all day and pasting the same application over and over.
+
+**ImmoCheck does it for you.** It watches your inbox for new listing alerts, reads each
+apartment, decides whether it's actually a fit, writes a personalized application in German,
+and puts it in front of the landlord — usually while you're doing something else.
+
+It found me my flat. I don't need it anymore, so here it is. 🍻
 
 > ⚠️ Personal-use project shared for educational purposes. Automating these platforms may
 > violate their Terms of Service — use at your own risk. See the [Disclaimer](#disclaimer).
 
 ---
 
+## What it does for you
+
+- **⚡ Applies fast** — a new listing goes from inbox to a finished application in seconds, unattended.
+- **🎯 Filters the noise** — an LLM scores every apartment against *your* profile, so you only hear about places actually worth your time.
+- **✍️ Writes like you** — personalized German applications from your own template, tailored to each listing.
+- **🔀 Covers three platforms** — ImmoScout24, WG-Gesucht, and immobilie1.de, all from one Gmail inbox.
+- **🔒 Private and cheap** — runs entirely on your machine with your own API key (Gemini's free tier is plenty), or a fully local LLM via Ollama.
+- **🖐️ Keeps you in control** — the recommended mode drafts each application and emails it to you to review and send yourself. Nothing goes out automatically.
+
 ## How it works
 
-1. Fetches unread alert emails from Gmail via IMAP
-2. Parses listing URLs and metadata from email HTML
-3. Pre-filters by price, image count, and blocklist keywords (no network call)
-4. Loads each listing page with Playwright to extract full details
-5. Evaluates with an LLM (Google Gemini, Anthropic, or Ollama)
-6. If approved: drafts a personalized German application
-7. Attempts to submit via browser automation, or queues for manual copy/paste
-8. Sends an email confirmation with the listing and drafted application
+```mermaid
+flowchart LR
+    A["📧 Gmail<br/>listing alert"] --> B{"Pre-filter<br/>price · images · keywords"}
+    B -->|reject| X["🗑️ Skip"]
+    B -->|pass| C["🌐 Scrape the<br/>full listing"]
+    C --> D{"🤖 LLM scores<br/>the fit"}
+    D -->|poor match| X
+    D -->|good match| E["✍️ Draft a personal<br/>German application"]
+    E --> F["📤 Queue for review<br/>or auto-submit"]
+    F --> G["✅ Email you the<br/>listing + draft"]
+```
+
+Everything runs locally on a loop: it polls Gmail every few minutes, and each new listing
+flows through the pipeline above on its own. You just read the emails it sends you.
 
 ---
 
 ## Setup
 
-Requires **Python 3.10+** and **git**. Check your Python version with `python --version`.
+You'll need **Python 3.10+**, **git**, and a **Gmail account**. Setup is one command.
 
-### 1. Clone the repository
+### 1. Clone and run the wizard
 
-The repository is **private**, so you'll need access and an authenticated GitHub account.
-
-**HTTPS** (prompts for a GitHub username + [personal access token](https://github.com/settings/tokens)):
 ```bash
 git clone https://github.com/quzle/immocheck.git
 cd immocheck
+python setup.py
 ```
 
-**SSH** (if you have an [SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh) added to GitHub):
-```bash
-git clone git@github.com:quzle/immocheck.git
-cd immocheck
-```
+`setup.py` creates a virtual environment, installs everything (including the Chromium
+browser Playwright needs), and walks you through an interactive wizard that writes your
+config — no files to edit by hand. Re-run just the questions anytime with
+`python setup.py --config-only`.
 
-### 2. Create a virtual environment
+**Have these two things ready before you run it:**
 
-**macOS / Linux**
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
-**Windows**
-```bat
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### 3. Install dependencies
-
-```bash
-pip install -r requirements.txt
-playwright install chromium
-```
-
-### 4. Configure credentials
-
-Copy `.env.example` to `.env.local` and fill in your real values:
-
-**macOS / Linux**
-```bash
-cp .env.example .env.local
-```
-
-**Windows**
-```bat
-copy .env.example .env.local
-```
-
-Required variables (see `.env.example` for the full list with descriptions):
-
-| Variable | Description |
+| The wizard asks for | Where to get it |
 |---|---|
-| `IMAP_EMAIL` | Gmail address that receives listing alerts |
-| `IMAP_PASSWORD` | Gmail **app password** — not your account password. Generate at [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) (requires 2-step verification) |
-| `IMAP_FOLDER` | Name of the Gmail label for ImmoScout24 emails |
-| `GEMINI_API_KEY` | Google Gemini API key (or set `ANTHROPIC_API_KEY` and `LLM_PROVIDER=anthropic`) |
+| **Gmail app password** | [myaccount.google.com/apppasswords](https://myaccount.google.com/apppasswords) — requires 2-step verification. This is *not* your normal Gmail password. |
+| **Gemini API key** *(free)* | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) → **Create API key**. The free tier is plenty for a personal search. (Prefer Anthropic or a fully local model? The wizard offers both.) |
 
-**Getting a free Gemini API key.** Google AI Studio gives you an API key with a free tier that's plenty for personal use:
+### 2. Tell it about you
 
-1. Go to [aistudio.google.com/apikey](https://aistudio.google.com/apikey) and sign in with a Google account.
-2. Click **Create API key** (choose **Create API key in new project** if you don't have one).
-3. Copy the key and paste it into `GEMINI_API_KEY` in `.env.local`.
+The wizard creates `templates/renter_profile.txt` from a template — **edit it** with your
+tenant details (age, job, income, why you're a good tenant). The LLM uses this to score
+apartments and write your applications, so it's worth a few minutes. You can also adjust
+`templates/application_template.txt` to set the tone of the German message.
 
-The default model (`gemini`) uses this key. The free tier has generous daily limits — well within what ImmoCheck needs for a single search. (Prefer Anthropic instead? Set `ANTHROPIC_API_KEY` and `LLM_PROVIDER=anthropic`; for a fully local, no-key option, see [Local LLM with Ollama](#advanced-usage).)
+> These files are gitignored, so your details never get committed. If they ever go missing,
+> ImmoCheck recreates them from the `.example` templates on the next run.
 
-### 5. Log in to ImmoScout24
+### 3. Set up a Gmail label for your alerts
 
-The bot loads listing pages with Playwright and needs an active ImmoScout24 session. It uses its **own dedicated Chrome profile** (set by `CHROME_USER_DATA_DIR` in `.env.local`, defaulting to `~/.chrome_profile_immocheck`), kept separate from your everyday Chrome — so both can run at the same time without conflict. Leave `CHROME_USER_DATA_DIR` at its default.
+Create a Gmail label and a filter so listing alert emails land in it — that's the folder
+ImmoCheck polls. The exact steps are in [Gmail setup](#gmail-setup) below. (The wizard asks
+for the label name; the default is `ImmoScout`.)
 
-Run the login helper:
+### 4. Log in to ImmoScout24 once
+
+ImmoCheck loads listing pages in its **own dedicated Chrome profile**, kept separate from
+your everyday browser so both can run at once. Log in once and the session is reused:
 
 ```bash
+source .venv/bin/activate      # Windows: .venv\Scripts\activate
 python test_login.py
 ```
 
-A browser window opens — log in to ImmoScout24. The script detects the successful login and the session is saved into the dedicated profile directory. It is reused automatically on every run, so you only do this once (repeat only if ImmoScout24 logs you out).
+A browser window opens — log in to ImmoScout24. It saves the session automatically; repeat
+only if ImmoScout24 logs you out.
 
-### 6. Set up your tenant profile and applicant details
+### 5. First run
 
-The personal templates ship as `.example` files. Copy them to their working filenames (these working copies are gitignored, so your details never get committed):
-
-**macOS / Linux**
-```bash
-cp templates/renter_profile.example.txt templates/renter_profile.txt
-cp templates/application_template.example.txt templates/application_template.txt
-cp templates/application_template_verbose.example.txt templates/application_template_verbose.txt
-cp templates/applicant_form.example.json templates/applicant_form.json
-```
-
-**Windows**
-```bat
-copy templates\renter_profile.example.txt templates\renter_profile.txt
-copy templates\application_template.example.txt templates\application_template.txt
-copy templates\application_template_verbose.example.txt templates\application_template_verbose.txt
-copy templates\applicant_form.example.json templates\applicant_form.json
-```
-
-Then fill in your details:
-- `templates/renter_profile.txt` — your tenant profile (age, job, income, etc.), used by the LLM
-- `templates/application_template.txt` — your application text, personalized per listing by the LLM
-- `templates/application_template_verbose.txt` — the longer application variant (used by the verbose draft mode)
-- `templates/applicant_form.json` — your name, contact, and address used to autofill the ImmoScout24 contact form
-
-> Without these working copies the bot exits at startup with `No such file or directory: 'templates/renter_profile.txt'`. They are gitignored, so they are **not** restored by `git checkout` — recreate them from the `.example` files if they go missing.
-
-### 7. Customize location scoring *(optional)*
-
-Set `OFFICE_LOCATION` and `TRANSIT_LINES` in `.env.local` to get commute-aware apartment scoring (e.g. `OFFICE_LOCATION="Marienplatz, Munich"`, `TRANSIT_LINES="U3, U6"`). Leave them generic to disable location-specific scoring.
-
-### 8. First run — dry run recommended
-
-Set `DRY_RUN=true` in `.env.local`, then:
+Safe defaults mean nothing is submitted automatically, so just start it:
 
 ```bash
 python main.py
 ```
+
+<details>
+<summary>Prefer to set things up manually, without the wizard?</summary>
+
+```bash
+# 1. Virtual environment
+python3 -m venv .venv
+source .venv/bin/activate            # Windows: .venv\Scripts\activate
+
+# 2. Dependencies
+pip install -r requirements.txt
+playwright install chromium
+
+# 3. Config — copy the template and edit .env.local by hand
+cp .env.example .env.local           # Windows: copy .env.example .env.local
+```
+
+Then edit `.env.local` (see `.env.example` for the full, commented list). The essentials:
+
+| Variable | Description |
+|---|---|
+| `IMAP_EMAIL` | Gmail address that receives listing alerts |
+| `IMAP_PASSWORD` | Gmail **app password** — [generate here](https://myaccount.google.com/apppasswords) (needs 2-step verification) |
+| `IMAP_FOLDER` | Name of the Gmail label for ImmoScout24 emails |
+| `GEMINI_API_KEY` | [Gemini API key](https://aistudio.google.com/apikey) (or set `ANTHROPIC_API_KEY` + `LLM_PROVIDER=anthropic`) |
+
+Optionally set `OFFICE_LOCATION` and `TRANSIT_LINES` for commute-aware scoring. Then create
+your profile files from the templates and fill them in:
+
+```bash
+cp templates/renter_profile.example.txt templates/renter_profile.txt
+cp templates/application_template.example.txt templates/application_template.txt
+cp templates/application_template_verbose.example.txt templates/application_template_verbose.txt
+cp templates/applicant_form.example.json templates/applicant_form.json   # only for browser auto-submit
+```
+
+Finally, log in (`python test_login.py`) and run (`python main.py`).
+
+</details>
 
 ---
 
@@ -204,6 +204,7 @@ Playwright attempts to fill and submit the contact form automatically. This may 
 ## Project structure
 
 ```
+setup.py                      One-command setup wizard (venv, deps, config)
 .env.example                  Template — copy to .env.local and fill in values
 ImmoCheck.command             Launcher script (macOS)
 ImmoCheck.bat                 Launcher script (Windows)
